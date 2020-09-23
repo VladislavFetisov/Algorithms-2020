@@ -14,23 +14,23 @@ public class SortsTest {
     static private final Random r = new Random(Calendar.getInstance().getTimeInMillis());
 
     private static void assertSorted(int[] arr, String prefix) {
-        for (int i = 0; i< arr.length-1; i++) {
-            assertTrue(arr[i] <= arr[i+1],
-                       prefix + " ERROR: i = " + i + " a[i] = " + arr[i] + " a[i+1] = " + arr[i+1]);
+        for (int i = 0; i < arr.length - 1; i++) {
+            assertTrue(arr[i] <= arr[i + 1],
+                    prefix + " ERROR: i = " + i + " a[i] = " + arr[i] + " a[i+1] = " + arr[i + 1]);
         }
     }
 
     private static <T extends Comparable<T>> void assertSorted(T[] arr, String prefix) {
-        for (int i = 0; i< arr.length-1; i++) {
-            assertTrue(arr[i].compareTo(arr[i+1]) <= 0,
-                       prefix + " ERROR: i = " + i + " a[i] = " + arr[i] + " a[i+1] = " + arr[i+1]);
+        for (int i = 0; i < arr.length - 1; i++) {
+            assertTrue(arr[i].compareTo(arr[i + 1]) <= 0,
+                    prefix + " ERROR: i = " + i + " a[i] = " + arr[i] + " a[i+1] = " + arr[i + 1]);
         }
     }
 
     @Test
     @Tag("Example")
     public void insertionSort() {
-        int[] arr = new int[] { 3, 7, 5, 9, 1, 6, 19, 13 };
+        int[] arr = new int[]{3, 7, 5, 9, 1, 6, 19, 13};
         Sorts.insertionSort(arr);
         assertSorted(arr, "INSERTION SORT");
     }
@@ -38,7 +38,7 @@ public class SortsTest {
     @Test
     @Tag("Example")
     public void insertionSortStrings() {
-        String[] arr = new String[] { "beta", "omega", "alpha", "", "!!!", "teta", "O" };
+        String[] arr = new String[]{"beta", "omega", "alpha", "", "!!!", "teta", "O"};
         Sorts.insertionSort(arr);
         assertSorted(arr, "INSERTION SORT");
     }
@@ -46,7 +46,7 @@ public class SortsTest {
     @Test
     @Tag("Example")
     public void mergeSort() {
-        int[] arr = new int[] { 3, 7, 5, 9, 1, 6, 19, 13 };
+        int[] arr = new int[]{3, 7, 5, 9, 1, 6, 19, 13};
         Sorts.mergeSort(arr);
         assertSorted(arr, "MERGE SORT");
     }
@@ -56,7 +56,7 @@ public class SortsTest {
     public void longInsertionSort() {
         int LENGTH = 65536;
         int[] arr = new int[LENGTH];
-        for (int i=0; i<LENGTH; i++) {
+        for (int i = 0; i < LENGTH; i++) {
             arr[i] = r.nextInt();
         }
         Sorts.insertionSort(arr);
@@ -68,7 +68,7 @@ public class SortsTest {
     public void longMergeSort() {
         int LENGTH = 65536;
         int[] arr = new int[LENGTH];
-        for (int i=0; i<LENGTH; i++) {
+        for (int i = 0; i < LENGTH; i++) {
             arr[i] = r.nextInt();
         }
         Sorts.mergeSort(arr);
@@ -80,7 +80,7 @@ public class SortsTest {
     public void longHeapSort() {
         int LENGTH = 65536;
         int[] arr = new int[LENGTH];
-        for (int i=0; i<LENGTH; i++) {
+        for (int i = 0; i < LENGTH; i++) {
             arr[i] = r.nextInt();
         }
         Sorts.heapSort(arr);
@@ -90,7 +90,7 @@ public class SortsTest {
     @Test
     @Tag("Example")
     public void quickSort() {
-        int[] arr = new int[] { 3, 7, 5, 9, 1, 6, 19, 13 };
+        int[] arr = new int[]{3, 7, 5, 9, 1, 6, 19, 13};
         Sorts.quickSort(arr);
         assertSorted(arr, "QUICK SORT");
     }
@@ -100,7 +100,7 @@ public class SortsTest {
     public void longQuickSort() {
         int LENGTH = 65536;
         int[] arr = new int[LENGTH];
-        for (int i=0; i<LENGTH; i++) {
+        for (int i = 0; i < LENGTH; i++) {
             arr[i] = r.nextInt();
         }
         Sorts.quickSort(arr);
@@ -113,7 +113,7 @@ public class SortsTest {
         int LENGTH = 65536;
         int LIMIT = 262144;
         int[] arr = new int[LENGTH];
-        for (int i=0; i<LENGTH; i++) {
+        for (int i = 0; i < LENGTH; i++) {
             arr[i] = r.nextInt(LIMIT);
         }
         int[] result = Sorts.countingSort(arr, LIMIT - 1);
