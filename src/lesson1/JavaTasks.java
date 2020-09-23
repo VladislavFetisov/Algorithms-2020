@@ -206,8 +206,36 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) throws IOException {
-
-
+        int max = 0, number = 0;
+        ArrayList<Integer> elements = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader
+                (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
+            String line = reader.readLine();
+            while (line != null) {
+                int element = Integer.parseInt(line);
+                if (element > max) max = element;
+                elements.add(element);
+                line = reader.readLine();
+            }
+        }
+        int[] count = new int[max + 1];
+        for (int element : elements) {
+            count[element]++;
+        }
+        max = 0;
+        for (int i = 0; i < count.length; i++) {
+            int repetitionOfNumber = count[i];
+            if (repetitionOfNumber > max) {
+                max = repetitionOfNumber;
+                number = i;
+            }
+        }
+        try (BufferedWriter writer = new BufferedWriter
+                (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
+            for (Integer element : elements) if (element != number) writer.write(element + System.lineSeparator());
+            for (int i = 0; i < max; i++) writer.write(number + System.lineSeparator());
+        }
+    }
         /*HashMap<Integer, Integer> map = new HashMap<>();
         ArrayList<Integer> arrayList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
@@ -238,7 +266,6 @@ public class JavaTasks {
                     writer.write(maxEntry.getKey() + System.lineSeparator());
             }
         }*/
-    }
 
     /**
      * Соединить два отсортированных массива в один
