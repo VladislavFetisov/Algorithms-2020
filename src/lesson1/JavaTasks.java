@@ -1,15 +1,9 @@
 package lesson1;
 
 import kotlin.NotImplementedError;
-import kotlin.Pair;
-import kotlin.text.Regex;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -48,9 +42,8 @@ public class JavaTasks {
      */
     static public void sortTimes(String inputName, String outputName) throws IOException {
         int addition = 12;
+        ArrayList<Integer> intTimes = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
-            ArrayList<Integer> intTimes = new ArrayList<>();
-
             String line = reader.readLine();
             while (line != null) {
 
@@ -67,40 +60,38 @@ public class JavaTasks {
                 addition = 12;
                 line = reader.readLine();
             }
-            int[] finalTime = new int[intTimes.size()];
-            for (int i = 0; i < intTimes.size(); i++) {
-                finalTime[i] = intTimes.get(i);
-            }
-            Sorts.insertionSort(finalTime);
-            try (BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
-                String add1 = "";
-                String add2 = "";
-                String add3 = "";
-                String add4 = "PM";
-                for (int intTime : finalTime) {
-                    int hours = intTime / 3600;
-                    int minutes = (intTime - hours * 3600) / 60;
-                    int seconds = (intTime - hours * 3600) - minutes * 60;
-                    if (hours < 12) {
-                        add4 = "AM";
-                        if (hours == 0) hours = 12;
-                        if (minutes < 10) add2 = "0";
-                        if (seconds < 10) add3 = "0";
-                    } else hours -= 12;
-                    if (hours < 10) add1 = "0";
+        }
+        int[] finalTime = new int[intTimes.size()];
+        for (int i = 0; i < intTimes.size(); i++) {
+            finalTime[i] = intTimes.get(i);
+        }
+        Sorts.insertionSort(finalTime);
+        try (BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
+            String add1 = "";
+            String add2 = "";
+            String add3 = "";
+            String add4 = "PM";
+            for (int intTime : finalTime) {
+                int hours = intTime / 3600;
+                int minutes = (intTime - hours * 3600) / 60;
+                int seconds = (intTime - hours * 3600) - minutes * 60;
+                if (hours < 12) {
+                    add4 = "AM";
+                    if (hours == 0) hours = 12;
+                    if (minutes < 10) add2 = "0";
+                    if (seconds < 10) add3 = "0";
+                } else hours -= 12;
+                if (hours < 10) add1 = "0";
 
-                    writer.write(add1 + hours + ":"
-                            + add2 + minutes + ":" + add3 + seconds + " " + add4 + System.lineSeparator());
-                    add1 = "";
-                    add2 = "";
-                    add3 = "";
-                    add4 = "PM";
-                }
+                writer.write(add1 + hours + ":"
+                        + add2 + minutes + ":" + add3 + seconds + " " + add4 + System.lineSeparator());
+                add1 = "";
+                add2 = "";
+                add3 = "";
+                add4 = "PM";
             }
         }
-
-
     }
 
     /**
@@ -129,8 +120,8 @@ public class JavaTasks {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortAddresses(String inputName, String outputName) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
+    static public void sortAddresses(String inputName, String outputName) { }
+    /*try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
             while (line != null) {
                 if (!Pattern.matches("[А-Я]([а-я]+) [А-Я]([а-я]+) - [А-Я][а-я]+ [1-9]+", line))
@@ -139,8 +130,7 @@ public class JavaTasks {
 
                 line = reader.readLine();
             }
-        }
-    }
+        }*/
 
     /**
      * Сортировка температур
@@ -172,9 +162,60 @@ public class JavaTasks {
      * 99.5
      * 121.3
      */
-    static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+    static public void sortTemperatures(String inputName, String outputName) throws IOException {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader
+                (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
+            String line = reader.readLine();
+            while (line != null) {
+                int number = (int) (Double.parseDouble(line) * 10);
+                arrayList.add(number);
+                line = reader.readLine();
+            }
+        }
+        int[] array = new int[arrayList.size()];
+        for (int i = 0; i < arrayList.size(); i++) array[i] = arrayList.get(i);
+
+        Sorts.mergeSort(array);
+
+        try (BufferedWriter writer = new BufferedWriter
+                (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
+            for (Integer number : array) {
+                double number1 = ((double) number) / 10;
+                writer.write(number1 + System.lineSeparator());
+            }
+
+        }
     }
+        /*int min = -2730;
+        int max = 5000;
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < Math.abs(min + max) + 1; i++) {
+            map.put(min, 0);
+            min++;
+        }
+
+        try (BufferedReader reader = new BufferedReader
+                (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
+            String line = reader.readLine();
+            while (line != null) {
+                int number = (int) Double.parseDouble(line) * 10;
+                int value = map.get(number);
+                map.put(number, value + 1);
+                line = reader.readLine();
+            }
+        }
+
+        try (BufferedWriter writer = new BufferedWriter
+                (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+
+            }
+        }
+    }*/
+
 
     /**
      * Сортировка последовательности
