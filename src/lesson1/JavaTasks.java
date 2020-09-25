@@ -4,6 +4,8 @@ import kotlin.NotImplementedError;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -47,7 +49,7 @@ public class JavaTasks {
             String line = reader.readLine();
             while (line != null) {
 
-                if (!Pattern.matches("((0[0-9])|(1[1-2])):([0-5]\\d):([0-5]\\d) (AM|PM)", line))
+                if (!Pattern.matches("((0[0-9])|(1[0-2])):([0-5]\\d):([0-5]\\d) (AM|PM)", line))
                     throw new IllegalArgumentException();
 
                 String[] currentTime = line.split("[: ]");
@@ -65,7 +67,7 @@ public class JavaTasks {
         for (int i = 0; i < intTimes.size(); i++) {
             finalTime[i] = intTimes.get(i);
         }
-        Sorts.insertionSort(finalTime);
+        Sorts.mergeSort(finalTime);
         try (BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
             String add1 = "";
@@ -120,7 +122,8 @@ public class JavaTasks {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortAddresses(String inputName, String outputName) { }
+    static public void sortAddresses(String inputName, String outputName) {
+    }
     /*try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
             while (line != null) {
@@ -163,45 +166,17 @@ public class JavaTasks {
      * 121.3
      */
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
-        ArrayList<Integer> arrayList = new ArrayList<>();
+        int min = -2730;
+        int max = 5000;
+        LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
+
+        for (int i = min; i < max + 1; i++) map.put(i, 0);
 
         try (BufferedReader reader = new BufferedReader
                 (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
             while (line != null) {
                 int number = (int) (Double.parseDouble(line) * 10);
-                arrayList.add(number);
-                line = reader.readLine();
-            }
-        }
-        int[] array = new int[arrayList.size()];
-        for (int i = 0; i < arrayList.size(); i++) array[i] = arrayList.get(i);
-
-        Sorts.mergeSort(array);
-
-        try (BufferedWriter writer = new BufferedWriter
-                (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
-            for (Integer number : array) {
-                double number1 = ((double) number) / 10;
-                writer.write(number1 + System.lineSeparator());
-            }
-
-        }
-    }
-        /*int min = -2730;
-        int max = 5000;
-        HashMap<Integer, Integer> map = new HashMap<>();
-
-        for (int i = 0; i < Math.abs(min + max) + 1; i++) {
-            map.put(min, 0);
-            min++;
-        }
-
-        try (BufferedReader reader = new BufferedReader
-                (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
-            String line = reader.readLine();
-            while (line != null) {
-                int number = (int) Double.parseDouble(line) * 10;
                 int value = map.get(number);
                 map.put(number, value + 1);
                 line = reader.readLine();
@@ -211,10 +186,14 @@ public class JavaTasks {
         try (BufferedWriter writer = new BufferedWriter
                 (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
             for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-
+                int repetition = entry.getValue();
+                if (repetition != 0) {
+                    for (int i = 0; i < repetition; i++)
+                        writer.write(((double) entry.getKey()) / 10 + System.lineSeparator());
+                }
             }
         }
-    }*/
+    }
 
 
     /**
