@@ -64,7 +64,7 @@ fun optimizeBuyAndSell(inputName: String): Pair<Int, Int> {
  * Х   4
  * х 6 Х
  *
- * х Х 3
+ * x Х 3
  * Х   4
  * Х 6 Х
  *
