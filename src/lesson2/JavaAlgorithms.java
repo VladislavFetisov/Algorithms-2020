@@ -98,15 +98,16 @@ public class JavaAlgorithms {
      * вернуть ту из них, которая встречается раньше в строке first.
      */
     static public String longestCommonSubstring(String firs, String second) {
-        if (firs.equals("") || second.equals("")) return "";
+        if (firs.equals("") || second.equals("")) return "";//Лучший случай трудоемкости=O(n)
         if (firs.equals(second)) return firs;
 
         int lengthOfFirst = firs.length();
         int iOfMax = lengthOfFirst, max = -1;
-        int[][] count = new int[lengthOfFirst][second.length()];
+
+        int[][] count = new int[lengthOfFirst][second.length()];//Ресурсоемкость:O(n*k)n-длина 1 строки,k-длина 2.
 
         for (int i = 0; i < lengthOfFirst; i++) {
-            for (int j = 0; j < second.length(); j++) {
+            for (int j = 0; j < second.length(); j++) {//Трудоемкость O(n*k)
                 if (firs.charAt(i) == second.charAt(j)) {
                     if (i > 0 && j > 0) count[i][j] = count[i - 1][j - 1] + 1;
                     else count[i][j] = 1;
@@ -118,7 +119,8 @@ public class JavaAlgorithms {
                 }
             }
         }
-        return iOfMax == lengthOfFirst ? "" : firs.substring(iOfMax - max + 1, iOfMax + 1);
+        return iOfMax == lengthOfFirst ? "" : firs.substring(iOfMax - max + 1, iOfMax + 1);//Трудоемкость в худшем случае O(n)
+        //Итого:трудоемкость O(n*k)+O(n)=O(n*k),что в лучшем~O(n^2),ресурсоемкость-O(n*k)
     }
 
     /**
@@ -132,6 +134,18 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+        int count = 0;
+        for (int i = 2; i <= limit; i++) if (JavaAlgorithms.isPrime(i)) count++;
+        return count;
+        //Трудоемкость O(n*sqrt(n))
     }
+
+    static private boolean isPrime(int number) {
+        if (number < 2) return false;
+        if (number == 2) return true;
+        if (number % 2 == 0) return false;
+        for (int i = 3; i <= (int) (Math.sqrt(number)); i += 2) if (number % i == 0) return false;
+        return true;
+    }
+
 }

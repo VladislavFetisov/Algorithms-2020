@@ -170,12 +170,12 @@ public class JavaTasks {
         int max = 5000;
         LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
 
-        for (int i = min; i < max + 1; i++) map.put(i, 0);
+        for (int i = min; i < max + 1; i++) map.put(i, 0);//Ресурсоемкость,трудоемкость:O(max-min+1)
 
         try (BufferedReader reader = new BufferedReader
                 (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
-            while (line != null) {
+            while (line != null) {//Трудоемкость O(n)
                 int number = (int) (Double.parseDouble(line) * 10);
                 int value = map.get(number);
                 map.put(number, value + 1);
@@ -185,14 +185,18 @@ public class JavaTasks {
 
         try (BufferedWriter writer = new BufferedWriter
                 (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
-            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {//Трудоемкость:O(max-min+1)
                 int repetition = entry.getValue();
                 if (repetition != 0) {
-                    for (int i = 0; i < repetition; i++)
+                    for (int i = 0; i < repetition; i++)//Трудоемкость в худшем случае=O(n),в лучшем=O(1)
                         writer.write(((double) entry.getKey()) / 10 + System.lineSeparator());
                 }
             }
         }
+        //Данный алгоритм достигает худших результатов,при большом диапазоне температур и входных данных в виде
+        // 1 температуры,которая повторяется n раз.Лучший случай достигается,когда n>>max-min+1 и у каждой температуры
+        // только 1 повторение
+
     }
 
 
@@ -231,19 +235,18 @@ public class JavaTasks {
         try (BufferedReader reader = new BufferedReader
                 (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
-            while (line != null) {
+            while (line != null) {//Трудоемкость O(n)
                 int element = Integer.parseInt(line);
                 if (element > max) max = element;
                 elements.add(element);
                 line = reader.readLine();
             }
         }
-        int[] count = new int[max + 1];
-        for (int element : elements) {
-            count[element]++;
-        }
+        int[] count = new int[max + 1];//Ресурсоемкость O(max+1)
+        for (int element : elements) count[element]++;//Трудоемкость O(n)
+
         max = 0;
-        for (int i = 0; i < count.length; i++) {
+        for (int i = 0; i < count.length; i++) {//Трудоемкость O(max+1)
             int repetitionOfNumber = count[i];
             if (repetitionOfNumber > max) {
                 max = repetitionOfNumber;
@@ -253,8 +256,12 @@ public class JavaTasks {
         try (BufferedWriter writer = new BufferedWriter
                 (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
             for (Integer element : elements) if (element != number) writer.write(element + System.lineSeparator());
+            //Трудоемкость O(n-c)
             for (int i = 0; i < max; i++) writer.write(number + System.lineSeparator());
+            //Трудоемкость O(c),где c-повторение максимального числа
         }
+        //Итого:худший случай:O(max+1)(где max-максимальное число)+O(n)+O(n-c)+O(с)(где с-кол-во повторений max)=O(max+1)
+        //Лучший случай:max<<n,поэтому трудоемкость=O(1)+O(n)+O(n-c)+O(c)=O(n)
     }
         /*HashMap<Integer, Integer> map = new HashMap<>();
         ArrayList<Integer> arrayList = new ArrayList<>();
