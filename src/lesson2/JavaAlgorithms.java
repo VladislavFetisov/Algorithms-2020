@@ -107,8 +107,9 @@ public class JavaAlgorithms {
         int[][] count = new int[lengthOfFirst][second.length()];//Ресурсоемкость:O(n*k)n-длина 1 строки,k-длина 2.
 
         for (int i = 0; i < lengthOfFirst; i++) {
+            char chrI = firs.charAt(i);
             for (int j = 0; j < second.length(); j++) {//Трудоемкость O(n*k)
-                if (firs.charAt(i) == second.charAt(j)) {
+                if (chrI == second.charAt(j)) {
                     if (i > 0 && j > 0) count[i][j] = count[i - 1][j - 1] + 1;
                     else count[i][j] = 1;
                     if (count[i][j] > max) {
