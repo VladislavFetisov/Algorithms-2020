@@ -2,7 +2,6 @@ package lesson7;
 
 import kotlin.NotImplementedError;
 
-import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -18,6 +17,7 @@ public class JavaDynamicTasks {
      * Если общей подпоследовательности нет, вернуть пустую строку.
      * Если есть несколько самых длинных общих подпоследовательностей, вернуть любую из них.
      * При сравнении подстрок, регистр символов *имеет* значение.
+     *
      * @return
      */
     public static String longestCommonSubSequence(String first, String second) {
@@ -34,28 +34,27 @@ public class JavaDynamicTasks {
                     else if (table[i][j - 1].length >= table[i - 1][j].length) table[i][j] = table[i][j - 1];
                     else table[i][j] = table[i - 1][j];
                 } else if (chrJ == chrI) {
-                    if (i == 0) table[i][j] = new Entry(new StringBuilder().append(chrI), 1);
+                    if (i == 0) table[i][j] = new Entry(String.valueOf(chrI), 1);
                     else if (j != 0) {
                         Entry entry = table[i][j - 1];
-                        table[i][j] = new Entry(entry.record.append(chrI), entry.length + 1);
-                    } else table[i][j] = new Entry(new StringBuilder().append(chrI), 1);
+                        table[i][j] = new Entry(entry.record + chrI, entry.length + 1);
+                    } else table[i][j] = new Entry(String.valueOf(chrI), 1);
                     triggerJ = true;
                 } else {
-                    if (i == 0) table[i][j] = new Entry(new StringBuilder(), 0);
+                    if (i == 0) table[i][j] = new Entry("", 0);
                     else table[i][j] = table[i - 1][j];
                 }
             }
             triggerJ = false;
         }
-        System.out.println(Arrays.deepToString(table));
-        return table[length1 - 1][length2 - 1].record.toString();
+        return table[length1 - 1][length2 - 1].record;
     }
 
     private static class Entry {
-        StringBuilder record;
+        String record;
         Integer length;
 
-        Entry(StringBuilder record, Integer length) {
+        Entry(String record, Integer length) {
             this.record = record;
             this.length = length;
         }
