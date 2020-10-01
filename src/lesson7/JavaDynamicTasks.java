@@ -21,51 +21,31 @@ public class JavaDynamicTasks {
      * @return
      */
     public static String longestCommonSubSequence(String first, String second) {
+        StringBuilder result = new StringBuilder();
         int length1 = first.length();
         int length2 = second.length();
-        Entry[][] table = new Entry[length1][length2];
-        boolean triggerJ = false;
-        for (int i = 0; i < length1; i++) {
+        int[][] table = new int[length1 + 1][length2 + 1];
+        for (int i = length1 - 1; i >= 0; i--) {
             char chrI = first.charAt(i);
-            for (int j = 0; j < length2; j++) {
+            for (int j = length2 - 1; j >= 0; j--) {
                 char chrJ = second.charAt(j);
-                if (triggerJ) {
-                    if (i == 0) table[i][j] = table[i][j - 1];
-                    else if (table[i][j - 1].length >= table[i - 1][j].length) table[i][j] = table[i][j - 1];
-                    else table[i][j] = table[i - 1][j];
-                } else if (chrJ == chrI) {
-                    if (i == 0) table[i][j] = new Entry(String.valueOf(chrI), 1);
-                    else if (j != 0) {
-                        Entry entry = table[i][j - 1];
-                        table[i][j] = new Entry(entry.record + chrI, entry.length + 1);
-                    } else table[i][j] = new Entry(String.valueOf(chrI), 1);
-                    triggerJ = true;
-                } else {
-                    if (i == 0) table[i][j] = new Entry("", 0);
-                    else table[i][j] = table[i - 1][j];
-                }
+                if (chrI == chrJ) table[i][j] = table[i + 1][j + 1] + 1;
+                else table[i][j] = Math.max(table[i + 1][j], table[i][j + 1]);
             }
-            triggerJ = false;
         }
-        return table[length1 - 1][length2 - 1].record;
-    }
-
-    private static class Entry {
-        String record;
-        Integer length;
-
-        Entry(String record, Integer length) {
-            this.record = record;
-            this.length = length;
+        int i = 0, j = 0;
+        while (table[i][j] != 0 && i < length1 && j < length2) {
+            char chrI = first.charAt(i), chrJ = second.charAt(j);
+            if (chrI == chrJ){
+                result.append(chrI);
+                i++;
+                j++;
+            }
+            else if (table[i][j] == table[i][j + 1]) j++;
+            else i++;
         }
-
-        @Override
-        public String toString() {
-            return "(" + record + "," + length + ")";
-        }
-
-    }
-
+        return result.toString();
+    }//Итого://Ресурсоемкость O(len1+len2+2),Трудоемкость O(len1*len2),что в лучшем случае O(n^2),где n=len1=len2
     /**
      * Наибольшая возрастающая подпоследовательность
      * Сложная

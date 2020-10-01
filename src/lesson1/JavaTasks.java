@@ -6,7 +6,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -42,8 +41,10 @@ public class JavaTasks {
      * <p>
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
-    static public void sortTimes(String inputName, String outputName) throws IOException {
-        int addition = 12;
+    static public void sortTimes(String inputName, String outputName) {
+        throw new NotImplementedError();
+    }
+        /*int addition = 12;
         ArrayList<Integer> intTimes = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
@@ -93,8 +94,8 @@ public class JavaTasks {
                 add3 = "";
                 add4 = "PM";
             }
-        }
-    }
+        }*/
+
 
     /**
      * Сортировка адресов
@@ -123,6 +124,7 @@ public class JavaTasks {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public void sortAddresses(String inputName, String outputName) {
+        throw new NotImplementedError();
     }
     /*try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
