@@ -4,8 +4,6 @@ import kotlin.NotImplementedError;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -170,29 +168,26 @@ public class JavaTasks {
     static public void sortTemperatures(String inputName, String outputName) throws IOException {
         int min = -2730;
         int max = 5000;
-        LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
-
-        for (int i = min; i < max + 1; i++) map.put(i, 0);//Ресурсоемкость,трудоемкость:O(max-min+1)
+        int[] array = new int[Math.abs(min) + Math.abs(max) + 1];//Ресурсоемкость O(max-min+1)
 
         try (BufferedReader reader = new BufferedReader
                 (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
             while (line != null) {//Трудоемкость O(n)
                 int number = (int) (Double.parseDouble(line) * 10);
-                int value = map.get(number);
-                map.put(number, value + 1);
+                array[Math.abs(min)+number]++;
                 line = reader.readLine();
             }
         }
 
         try (BufferedWriter writer = new BufferedWriter
                 (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
-            for (Map.Entry<Integer, Integer> entry : map.entrySet()) {//Трудоемкость:O(max-min+1)
-                int repetition = entry.getValue();
-                if (repetition != 0) {
+            //Трудоемкость:O(max-min+1)
+            for (int j = 0; j < array.length; j++) {
+                int repetition = array[j];
+                if (repetition != 0)
                     for (int i = 0; i < repetition; i++)//Трудоемкость в худшем случае=O(n),в лучшем=O(1)
-                        writer.write(((double) entry.getKey()) / 10 + System.lineSeparator());
-                }
+                        writer.write((double) (min + j) / 10 + System.lineSeparator());
             }
         }
         //Данный алгоритм достигает худших результатов,при большом диапазоне температур и входных данных в виде
