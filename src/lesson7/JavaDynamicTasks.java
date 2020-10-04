@@ -2,6 +2,7 @@ package lesson7;
 
 import kotlin.NotImplementedError;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -36,16 +37,16 @@ public class JavaDynamicTasks {
         int i = 0, j = 0;
         while (table[i][j] != 0 && i < length1 && j < length2) {
             char chrI = first.charAt(i), chrJ = second.charAt(j);
-            if (chrI == chrJ){
+            if (chrI == chrJ) {
                 result.append(chrI);
                 i++;
                 j++;
-            }
-            else if (table[i][j] == table[i][j + 1]) j++;
+            } else if (table[i][j] == table[i][j + 1]) j++;
             else i++;
         }
         return result.toString();
     }//Итого://Ресурсоемкость O(len1+len2+2),Трудоемкость O(len1*len2),что в лучшем случае O(n^2),где n=len1=len2
+
     /**
      * Наибольшая возрастающая подпоследовательность
      * Сложная
@@ -59,7 +60,58 @@ public class JavaDynamicTasks {
      * В примере ответами являются 2, 8, 9, 12 или 2, 5, 9, 12 -- выбираем первую из них.
      */
     public static List<Integer> longestIncreasingSubSequence(List<Integer> list) {
-        throw new NotImplementedError();
+        switch (list.size()) {
+            case 0:
+            case 1:
+                return list;
+            case 2:
+                if (list.get(1) > list.get(0)) return list;
+                else {
+                    ArrayList<Integer> a = new ArrayList<>();
+                    a.add(list.get(0));
+                    return a;
+                }
+        }
+
+        int max = (int) Double.NEGATIVE_INFINITY;
+        int indexOfMax = 0;
+        int[] array = new int[list.size()];
+
+        for (int i = 0; i < list.size(); i++) {
+            array[i] = 1;
+            int elementI = list.get(i);
+            for (int j = 0; j < i; j++) {
+                if (list.get(j) < elementI) {
+                    array[i] = Math.max(array[i], array[j] + 1);
+                    if (array[i] > max) {
+                        max = array[i];
+                        indexOfMax = i;
+                    }
+                }
+            }
+        }
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 0; i < max; i++) result.add(0);
+
+        int previousNumber = list.get(indexOfMax) + 1;
+        for (int i = indexOfMax; i >= 0; i--) {
+            int numberAtI = list.get(i);
+            if (i == 0) {
+                if (numberAtI > result.get(0) && numberAtI < previousNumber) result.set(0, numberAtI);
+                break;
+            }
+            if (array[i] == max && numberAtI < previousNumber) {
+                result.set(max - 1, numberAtI);
+                if (array[i - 1] < max) {
+                    previousNumber = numberAtI;
+                    max--;
+                }
+            } else if (array[i] == max) {
+                previousNumber = result.get(array[i]);
+                max--;
+            }
+        }
+        return result;
     }
 
     /**
