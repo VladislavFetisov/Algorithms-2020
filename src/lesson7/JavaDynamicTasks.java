@@ -80,7 +80,7 @@ public class JavaDynamicTasks {
         for (int i = 0; i < list.size(); i++) {
             array[i] = 1;
             int elementI = list.get(i);
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < i; j++) {//Ресурсоемкость-O(list.size),трудоемкость-O(n^2)
                 if (list.get(j) < elementI) {
                     array[i] = Math.max(array[i], array[j] + 1);
                     if (array[i] > max) {
@@ -88,10 +88,17 @@ public class JavaDynamicTasks {
                         indexOfMax = i;
                     }
                 }
+
             }
         }
+        if (indexOfMax == 0) {
+            ArrayList<Integer> arrayList = new ArrayList<>();
+            arrayList.add(list.get((0)));
+            return arrayList;
+        }
+
         ArrayList<Integer> result = new ArrayList<>();
-        for (int i = 0; i < max; i++) result.add(0);
+        for (int i = 0; i < max; i++) result.add((int) Double.NEGATIVE_INFINITY);
 
         int previousNumber = list.get(indexOfMax) + 1;
         for (int i = indexOfMax; i >= 0; i--) {
@@ -100,19 +107,21 @@ public class JavaDynamicTasks {
                 if (numberAtI > result.get(0) && numberAtI < previousNumber) result.set(0, numberAtI);
                 break;
             }
-            if (array[i] == max && numberAtI < previousNumber) {
-                result.set(max - 1, numberAtI);
-                if (array[i - 1] < max) {
-                    previousNumber = numberAtI;
+            if (array[i] == max) {
+                if (numberAtI < previousNumber) {
+                    result.set(max - 1, numberAtI);
+                    if (array[i - 1] < max) {
+                        previousNumber = numberAtI;
+                        max--;
+                    }
+                } else {
+                    previousNumber = result.get(array[i]);
                     max--;
                 }
-            } else if (array[i] == max) {
-                previousNumber = result.get(array[i]);
-                max--;
             }
         }
         return result;
-    }
+    }//Итого:Трудоемкость-O(n^2),ресурсоемкость-O(list.size)
 
     /**
      * Самый короткий маршрут на прямоугольном поле.
