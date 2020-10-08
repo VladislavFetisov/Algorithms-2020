@@ -291,6 +291,29 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
+        try {
+            sortSequence("input/seq_in6.txt", "temp.txt")
+            assertFileContent(
+                "temp.txt",
+                """
+                    1
+                    10000000
+                    2
+                    10000000
+                    400000000
+                    400000000
+                    33
+                    400000000
+                    400000000
+                    3
+                    3
+                    3
+                    3
+                    """.trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
 
         fun testGeneratedSequence(totalSize: Int, answerSize: Int): PerfResult<Unit> {
             try {

@@ -107,7 +107,7 @@ public class JavaDynamicTasks {
                 if (numberAtI > result.get(0) && numberAtI < previousNumber) result.set(0, numberAtI);
                 break;
             }
-            if (array[i] == max) {
+            else if (array[i] == max) {
                 if (numberAtI < previousNumber) {
                     result.set(max - 1, numberAtI);
                     if (array[i - 1] < max) {

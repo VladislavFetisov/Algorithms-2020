@@ -4,6 +4,8 @@ import kotlin.NotImplementedError;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -175,7 +177,7 @@ public class JavaTasks {
             String line = reader.readLine();
             while (line != null) {//Трудоемкость O(n)
                 int number = (int) (Double.parseDouble(line) * 10);
-                array[Math.abs(min)+number]++;
+                array[Math.abs(min) + number]++;
                 line = reader.readLine();
             }
         }
@@ -227,41 +229,8 @@ public class JavaTasks {
      * 2
      */
     static public void sortSequence(String inputName, String outputName) throws IOException {
-        int max = 0, number = 0;
-        ArrayList<Integer> elements = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader
-                (new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
-            String line = reader.readLine();
-            while (line != null) {//Трудоемкость O(n)
-                int element = Integer.parseInt(line);
-                if (element > max) max = element;
-                elements.add(element);
-                line = reader.readLine();
-            }
-        }
-        int[] count = new int[max + 1];//Ресурсоемкость O(max+1)
-        for (int element : elements) count[element]++;//Трудоемкость O(n)
-
-        max = 0;
-        for (int i = 0; i < count.length; i++) {//Трудоемкость O(max+1)
-            int repetitionOfNumber = count[i];
-            if (repetitionOfNumber > max) {
-                max = repetitionOfNumber;
-                number = i;
-            }
-        }
-        try (BufferedWriter writer = new BufferedWriter
-                (new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
-            for (Integer element : elements) if (element != number) writer.write(element + System.lineSeparator());
-            //Трудоемкость O(n-c)
-            for (int i = 0; i < max; i++) writer.write(number + System.lineSeparator());
-            //Трудоемкость O(c),где c-повторение максимального числа
-        }
-        //Итого:худший случай:O(max+1)(где max-максимальное число)+O(n)+O(n-c)+O(с)(где с-кол-во повторений max)=O(max+1)
-        //Лучший случай:max<<n,поэтому трудоемкость=O(1)+O(n)+O(n-c)+O(c)=O(n)
-    }
-        /*HashMap<Integer, Integer> map = new HashMap<>();
-        ArrayList<Integer> arrayList = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();//Ресурсоемкость-O(n)
+        ArrayList<Integer> arrayList = new ArrayList<>();//Ресурсоемкость-O(n)
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(inputName), UTF_8))) {
             String line = reader.readLine();
             while (line != null) {
@@ -275,21 +244,21 @@ public class JavaTasks {
             }
         }
         Map.Entry<Integer, Integer> maxEntry = null;
-        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {//Трудоемкость-O(n)
             if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
-                maxEntry = entry;//сделать красивее
-            else if (entry.getValue().compareTo(maxEntry.getValue()) == 0) {
-                if (maxEntry.getKey() > entry.getKey()) maxEntry = entry;
-            }
+                maxEntry = entry;
+            else if (entry.getValue().compareTo(maxEntry.getValue()) == 0 && maxEntry.getKey() > entry.getKey())
+                maxEntry = entry;
         }
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outputName), UTF_8))) {
             if (maxEntry != null) {
-                for (Integer number : arrayList)
+                for (Integer number : arrayList)//Трудоемкость-O(n-c)
                     if (!number.equals(maxEntry.getKey())) writer.write(number + System.lineSeparator());
-                for (int i = 0; i < maxEntry.getValue(); i++)
+                for (int i = 0; i < maxEntry.getValue(); i++)//Трудоемкость-O(c)
                     writer.write(maxEntry.getKey() + System.lineSeparator());
             }
-        }*/
+        }
+    }//Итого://Трудоемкость-O(n),ресурсоемкость-O(2n)
 
     /**
      * Соединить два отсортированных массива в один
