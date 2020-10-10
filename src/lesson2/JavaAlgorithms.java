@@ -3,6 +3,8 @@ package lesson2;
 import kotlin.NotImplementedError;
 import kotlin.Pair;
 
+import java.util.Arrays;
+
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
     /**
@@ -135,18 +137,17 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
-        int count = 0;
-        for (int i = 2; i <= limit; i++) if (JavaAlgorithms.isPrime(i)) count++;
-        return count;
-        //Трудоемкость O(n*sqrt(n))
-    }
-
-    static private boolean isPrime(int number) {
-        if (number < 2) return false;
-        if (number == 2) return true;
-        if (number % 2 == 0) return false;
-        for (int i = 3; i <= (int) (Math.sqrt(number)); i += 2) if (number % i == 0) return false;
-        return true;
+        if (limit < 2) return 0;
+        int[] array = new int[limit - 1];//Ресурсоемкость O(limit)
+        for (int i = 0; i < limit - 1; i++) array[i] = 1;//O(n)
+        for (int i = 2; i * i <= limit; i++) {//O(sqrt(n)
+            if (array[i - 2] == 1) {
+                for (int j = i * i; j <= limit; j += i) {//O(log(log(n)))
+                    array[j - 2] = 0;
+                }
+            }
+        }
+        return (int) Arrays.stream(array).filter(c -> c == 1).count();
     }
 
 }
