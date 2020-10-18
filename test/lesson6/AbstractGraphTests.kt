@@ -283,6 +283,7 @@ abstract class AbstractGraphTests {
             addConnection(d, e)
         }.build()
         val longestUnconnectedPath = unconnected.longestSimplePath()
+        println(longestUnconnectedPath)
         assertEquals(2, longestUnconnectedPath.length)
 
         val graph = GraphBuilder().apply {
