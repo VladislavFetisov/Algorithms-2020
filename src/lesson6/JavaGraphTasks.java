@@ -112,8 +112,8 @@ public class JavaGraphTasks {
      * <p>
      * Пример:
      * <p>
-     * G -- H
-     * |    |
+     *      G -- H
+     *      |    |
      * A -- B -- C -- D
      * |    |    |    |
      * E    F -- I    |
@@ -122,42 +122,6 @@ public class JavaGraphTasks {
      * <p>
      * Ответ: A, E, J, K, D, C, H, G, B, F, I
      */
-    static class VertexData {
-        private boolean isVisited;
-        private final Vertex vertex;
-
-        public VertexData(boolean isVisited, Vertex vertex) {
-            this.isVisited = isVisited;
-            this.vertex = vertex;
-        }
-
-        @Override
-        public String toString() {
-            return "VertexData{" +
-                    "isVisited=" + isVisited +
-                    ", vertex=" + vertex +
-                    '}';
-        }
-    }
-
-    static class VertexPair {
-        private final Vertex vertex;
-        private final Integer index;
-
-        public VertexPair(Vertex vertex, Integer index) {
-            this.vertex = vertex;
-            this.index = index;
-        }
-
-        @Override
-        public String toString() {
-            return "VertexPair{" +
-                    "vertex=" + vertex +
-                    ", index=" + index +
-                    '}';
-        }
-    }
-
     private static void modifiedDfs(Vertex vertex, Graph graph, ArrayList<Vertex> currentPath,
                                     ArrayList<Vertex> resultPath) {
         if (!currentPath.contains(vertex)) {
@@ -170,8 +134,6 @@ public class JavaGraphTasks {
             resultPath.clear();
             resultPath.addAll(currentPath);
         }
-        //System.out.println(currentPath.toString() + "куррент");
-        //System.out.println(resultPath.toString() + "резулт");
         if (currentPath.size() != 1) currentPath.remove(currentPath.size() - 1);
 
     }
@@ -184,6 +146,7 @@ public class JavaGraphTasks {
             currentPath = new ArrayList<>();
             modifiedDfs(vertex, graph, currentPath, resultPath);
         }
+
         Path result = new Path(resultPath.get(0));
         if (resultPath.size() > 1) {
             for (int i = 1; i < resultPath.size(); i++) {
