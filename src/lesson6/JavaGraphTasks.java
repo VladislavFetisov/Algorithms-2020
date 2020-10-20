@@ -60,8 +60,8 @@ public class JavaGraphTasks {
      * <p>
      * Ответ:
      * <p>
-     * G    H
-     * |    |
+     *      G    H
+     *      |    |
      * A -- B -- C -- D
      * |    |    |
      * E    F    I
@@ -126,9 +126,8 @@ public class JavaGraphTasks {
                                     ArrayList<Vertex> resultPath) {
         if (!currentPath.contains(vertex)) {
             currentPath.add(vertex);
-            for (Vertex neighbour : graph.getNeighbors(vertex)) {
+            for (Vertex neighbour : graph.getNeighbors(vertex))
                 if (!currentPath.contains(neighbour)) modifiedDfs(neighbour, graph, currentPath, resultPath);
-            }
         }
         if (currentPath.size() > resultPath.size()) {
             resultPath.clear();
@@ -148,62 +147,11 @@ public class JavaGraphTasks {
         }
 
         Path result = new Path(resultPath.get(0));
-        if (resultPath.size() > 1) {
-            for (int i = 1; i < resultPath.size(); i++) {
-                result = new Path(result, graph, resultPath.get(i));
-            }
-        }
+        if (resultPath.size() > 1)
+            for (int i = 1; i < resultPath.size(); i++) result = new Path(result, graph, resultPath.get(i));
         return result;
+        //Итого:Ресурсоемкость:O(2V),Трудоемкость:O(V*(V+E))
     }
-        /*HashMap<VertexPair, ArrayList<VertexPair>> adjacencyList = new HashMap<>();
-        ArrayList<VertexData> dataArray = new ArrayList<>();
-
-        int i = 0;
-        for (Vertex vertex : graph.getVertices()) {
-            adjacencyList.put(new VertexPair(vertex, i), new ArrayList<>());
-            dataArray.add(new VertexData(false, vertex));
-            i++;
-        }
-        for (Map.Entry<VertexPair, ArrayList<VertexPair>> entry : adjacencyList.entrySet()) {
-            for (Vertex neighbour : graph.getNeighbors(entry.getKey().vertex)) {
-                for (Map.Entry<VertexPair, ArrayList<VertexPair>> entry1 : adjacencyList.entrySet()) {
-                    if (entry1.getKey().vertex == neighbour) {
-                        entry.getValue().add(entry1.getKey());
-                        break;
-                    }
-                }//(A,i)=(B,j),(C,k)-Список смежности,adjacencyList;i,j,k-индексы в массиве dataArray
-            }
-        }
-        int c;
-        Integer max = -1;
-        for (Map.Entry<VertexPair, ArrayList<VertexPair>> entry : adjacencyList.entrySet()) {
-            currentPath = new ArrayList<>();
-            c = -1;
-            currentPath.add(entry.getKey().vertex);
-            modifiedDfs(entry.getKey(), c, max, resultPath, currentPath, dataArray, adjacencyList);
-        }
-        Path result = new Path();
-        for (Vertex vertex : resultPath) result = new Path(result, graph, vertex);
-        return result;
-
-       */
-/*VertexPair vertexPair, int c, Integer max, ArrayList<Vertex> resultPath,
-                                    ArrayList<Vertex> currentPath, List<VertexData> dataArray, Map<VertexPair,
-            ArrayList<VertexPair>> adjacencyList c++;
-        dataArray.get(vertexPair.index).isVisited = true;
-        System.out.println(dataArray);
-        for (VertexPair neighbour : adjacencyList.get(vertexPair)) {
-            if (!dataArray.get(neighbour.index).isVisited)
-                modifiedDfs(neighbour, c, max, resultPath, currentPath, dataArray, adjacencyList);
-        }
-        if (currentPath.size() > resultPath.size()) {
-            resultPath.clear();
-            resultPath.addAll(currentPath);
-        }
-        dataArray.get(vertexPair.index).isVisited = false;
-        currentPath.remove(currentPath.size() - 1);
-        */
-
     /**
      * Балда
      * Сложная

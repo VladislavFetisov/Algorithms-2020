@@ -3,6 +3,7 @@ package lesson7;
 import kotlin.NotImplementedError;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -73,7 +74,7 @@ public class JavaDynamicTasks {
                 }
         }
 
-        int max = (int) Double.NEGATIVE_INFINITY;
+        int max = -1;
         int indexOfMax = 0;
         int[] array = new int[list.size()];
 
@@ -93,12 +94,12 @@ public class JavaDynamicTasks {
         }
         if (indexOfMax == 0) {
             ArrayList<Integer> arrayList = new ArrayList<>();
-            arrayList.add(list.get((0)));
+            arrayList.add(list.get(0));
             return arrayList;
         }
 
         ArrayList<Integer> result = new ArrayList<>();
-        for (int i = 0; i < max; i++) result.add((int) Double.NEGATIVE_INFINITY);
+        for (int i = 0; i < max; i++) result.add(Collections.min(list) - 1);
 
         int previousNumber = list.get(indexOfMax) + 1;
         for (int i = indexOfMax; i >= 0; i--) {
@@ -106,8 +107,7 @@ public class JavaDynamicTasks {
             if (i == 0) {
                 if (numberAtI > result.get(0) && numberAtI < previousNumber) result.set(0, numberAtI);
                 break;
-            }
-            else if (array[i] == max) {
+            } else if (array[i] == max) {
                 if (numberAtI < previousNumber) {
                     result.set(max - 1, numberAtI);
                     if (array[i - 1] < max) {
