@@ -60,8 +60,8 @@ public class JavaGraphTasks {
      * <p>
      * Ответ:
      * <p>
-     *      G    H
-     *      |    |
+     * G    H
+     * |    |
      * A -- B -- C -- D
      * |    |    |
      * E    F    I
@@ -98,9 +98,39 @@ public class JavaGraphTasks {
      * <p>
      * Эта задача может быть зачтена за пятый и шестой урок одновременно
      */
-    public static Set<Vertex> largestIndependentVertexSet(Graph graph) {
-        throw new NotImplementedError();
+    private static void dfs(Vertex vertex, Map<Vertex, Boolean> info, Graph graph, Set<Vertex> currentEven,
+                            Set<Vertex> currentUneven, boolean isEvenCount) {
+        if (isEvenCount) currentEven.add(vertex);
+        else currentUneven.add(vertex);
+        info.put(vertex, true);
+        for (Vertex neighbour : graph.getNeighbors(vertex)) {
+            if (!info.get(neighbour)) {
+                isEvenCount = !isEvenCount;
+                dfs(neighbour, info, graph, currentEven, currentUneven, isEvenCount);
+                isEvenCount = !isEvenCount;
+            }
+        }
     }
+
+    public static Set<Vertex> largestIndependentVertexSet(Graph graph) {
+        if (graph.getVertices().isEmpty()) return new HashSet<>();
+        HashMap<Vertex, Boolean> info = new HashMap<>();
+        LinkedHashSet<Vertex> result = new LinkedHashSet<>();
+        LinkedHashSet<Vertex> currentEven = new LinkedHashSet<>();
+        LinkedHashSet<Vertex> currentUneven = new LinkedHashSet<>();
+        boolean isEvenCount;
+
+        for (Vertex vertex : graph.getVertices()) info.put(vertex, false);
+
+        for (Vertex vertex : graph.getVertices())
+            if (!info.get(vertex)) {
+                dfs(vertex, info, graph, currentEven, currentUneven, true);
+                result.addAll(currentEven.size() >= currentUneven.size() ? currentEven : currentUneven);
+                currentEven.clear();
+                currentUneven.clear();
+            }
+        return result;
+    }//Ресурсоемкость O(V),трудоемкость O(V+E)
 
     /**
      * Наидлиннейший простой путь.
@@ -112,8 +142,8 @@ public class JavaGraphTasks {
      * <p>
      * Пример:
      * <p>
-     *      G -- H
-     *      |    |
+     * G -- H
+     * |    |
      * A -- B -- C -- D
      * |    |    |    |
      * E    F -- I    |
@@ -122,36 +152,41 @@ public class JavaGraphTasks {
      * <p>
      * Ответ: A, E, J, K, D, C, H, G, B, F, I
      */
-    private static void modifiedDfs(Vertex vertex, Graph graph, ArrayList<Vertex> currentPath,
-                                    ArrayList<Vertex> resultPath) {
-        if (!currentPath.contains(vertex)) {
-            currentPath.add(vertex);
-            for (Vertex neighbour : graph.getNeighbors(vertex))
-                if (!currentPath.contains(neighbour)) modifiedDfs(neighbour, graph, currentPath, resultPath);
+    private static void modifiedDfs(Vertex vertex, Graph graph, ArrayList<Vertex> current,
+                                    ArrayList<Vertex> result) {
+        if (!current.contains(vertex)) {
+            current.add(vertex);
+            for (Vertex neighbour : graph.getNeighbors(vertex))//E
+                if (!current.contains(neighbour)) modifiedDfs(neighbour, graph, current, result);//E
         }
-        if (currentPath.size() > resultPath.size()) {
-            resultPath.clear();
-            resultPath.addAll(currentPath);
+        if (current.size() > result.size()) {
+            result.clear();
+            result.addAll(current);
         }
-        if (currentPath.size() != 1) currentPath.remove(currentPath.size() - 1);
+        if (current.size() != 1) current.remove(current.size() - 1);
 
+    }
+
+    private static Path createPathFromVertexList(List<Vertex> vertices, Graph graph) {
+        Path resultPath = new Path(vertices.get(0));
+        if (vertices.size() > 1)
+            for (int i = 1; i < vertices.size(); i++) resultPath = new Path(resultPath, graph, vertices.get(i));
+        return resultPath;
     }
 
     public static Path longestSimplePath(Graph graph) {
         if (graph.getVertices().isEmpty()) return new Path();
-        ArrayList<Vertex> resultPath = new ArrayList<>();
-        ArrayList<Vertex> currentPath;
-        for (Vertex vertex : graph.getVertices()) {
-            currentPath = new ArrayList<>();
-            modifiedDfs(vertex, graph, currentPath, resultPath);
+        ArrayList<Vertex> result = new ArrayList<>();
+        ArrayList<Vertex> current;
+        for (Vertex vertex : graph.getVertices()) {//V
+            current = new ArrayList<>();
+            if (result.size() != graph.getVertices().size()) modifiedDfs(vertex, graph, current, result);
+            else return createPathFromVertexList(result, graph);
         }
-
-        Path result = new Path(resultPath.get(0));
-        if (resultPath.size() > 1)
-            for (int i = 1; i < resultPath.size(); i++) result = new Path(result, graph, resultPath.get(i));
-        return result;
-        //Итого:Ресурсоемкость:O(2V),Трудоемкость:O(V*(V+E))
+        return createPathFromVertexList(result, graph);
+        //Итого:Ресурсоемкость:O(2V),Трудоемкость:O(V*E.pow(V)).
     }
+
     /**
      * Балда
      * Сложная
