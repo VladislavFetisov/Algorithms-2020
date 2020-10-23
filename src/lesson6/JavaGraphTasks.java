@@ -78,8 +78,8 @@ public class JavaGraphTasks {
      * <p>
      * Дан граф без циклов (получатель), например
      * <p>
-     * G -- H -- J
-     * |
+     *      G -- H -- J
+     *      |
      * A -- B -- D
      * |         |
      * C -- F    I
@@ -113,9 +113,8 @@ public class JavaGraphTasks {
     }
 
     public static Set<Vertex> largestIndependentVertexSet(Graph graph) {
-        if (graph.getVertices().isEmpty()) return new HashSet<>();
         HashMap<Vertex, Boolean> info = new HashMap<>();
-        LinkedHashSet<Vertex> result = new LinkedHashSet<>();
+        HashSet<Vertex> result = new LinkedHashSet<>();
         LinkedHashSet<Vertex> currentEven = new LinkedHashSet<>();
         LinkedHashSet<Vertex> currentUneven = new LinkedHashSet<>();
         boolean isEvenCount;
