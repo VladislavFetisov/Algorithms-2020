@@ -6,6 +6,7 @@ import java.util.*;
 
 import static lesson6.Graph.Edge;
 import static lesson6.Graph.Vertex;
+import static lesson6.JavaGraphTasks.VertexData.VertexColour.*;
 
 @SuppressWarnings("unused")
 public class JavaGraphTasks {
@@ -98,6 +99,47 @@ public class JavaGraphTasks {
      * <p>
      * Эта задача может быть зачтена за пятый и шестой урок одновременно
      */
+
+
+    public static class VertexData {
+        public enum VertexColour {
+            WHITE, GREY, BlACK
+        }
+
+        private VertexColour vertexColour;
+        private Vertex previous;
+
+        VertexData(VertexColour vertexColour, Vertex previous) {
+            this.vertexColour = vertexColour;
+            this.previous = previous;
+        }
+    }
+
+    private static void classicDfs(Graph graph, Vertex vertex, Map<Vertex, VertexData> info, List<Integer> a) {
+        info.get(vertex).vertexColour = GREY;
+        for (Vertex neighbour : graph.getNeighbors(vertex)) {
+            if (info.get(neighbour).vertexColour == WHITE) {
+                info.get(neighbour).previous = vertex;
+                classicDfs(graph, neighbour, info, a);
+            }
+            if (info.get(neighbour).vertexColour == GREY && !info.get(vertex).previous.equals(neighbour))
+                a.add(1);
+        }
+        info.get(vertex).vertexColour = BlACK;
+    }
+
+    private static boolean isCyclical(Graph graph) {
+        HashMap<Vertex, VertexData> map = new HashMap<>();
+        Boolean trigger=false;
+        ArrayList<Integer> a = new ArrayList<>();
+        for (Vertex vertex : graph.getVertices()) map.put(vertex, new VertexData(WHITE, null));
+        for (Vertex vertex : graph.getVertices()) {
+            if (map.get(vertex).vertexColour == WHITE) classicDfs(graph, vertex, map, a);
+            if (!a.isEmpty()) return true;
+        }
+        return false;
+    }
+
     private static void dfs(Vertex vertex, Map<Vertex, Boolean> info, Graph graph, Set<Vertex> currentEven,
                             Set<Vertex> currentUneven, boolean isEvenCount) {
         if (isEvenCount) currentEven.add(vertex);
@@ -113,6 +155,8 @@ public class JavaGraphTasks {
     }
 
     public static Set<Vertex> largestIndependentVertexSet(Graph graph) {
+        if (isCyclical(graph)) throw new IllegalArgumentException();//O(V+E)
+
         HashMap<Vertex, Boolean> info = new HashMap<>();
         HashSet<Vertex> result = new LinkedHashSet<>();
         LinkedHashSet<Vertex> currentEven = new LinkedHashSet<>();
