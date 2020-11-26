@@ -109,10 +109,12 @@ abstract class AbstractOpenAddressingSetTest {
             while (openAddressingSetIter.hasNext()) {
                 controlSet.remove(openAddressingSetIter.next())
             }
+
             assertTrue(
                 controlSet.isEmpty(),
                 "OpenAddressingSetIterator doesn't traverse the entire set."
             )
+
             assertFailsWith<IllegalStateException>("Something was supposedly returned after the elements ended") {
                 openAddressingSetIter.next()
             }

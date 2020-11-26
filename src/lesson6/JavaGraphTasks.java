@@ -195,7 +195,7 @@ public class JavaGraphTasks {
      * <p>
      * Ответ: A, E, J, K, D, C, H, G, B, F, I
      */
-    private static void modifiedDfs(Vertex vertex, Graph graph, ArrayList<Vertex> current,
+    private static void modifiedDfs(Vertex vertex, Graph graph, LinkedHashSet<Vertex> current,
                                     ArrayList<Vertex> result) {
         if (!current.contains(vertex)) {
             current.add(vertex);
@@ -206,7 +206,7 @@ public class JavaGraphTasks {
             result.clear();
             result.addAll(current);
         }
-        if (current.size() != 1) current.remove(current.size() - 1);
+        if (current.size() != 1) current.remove(vertex);
 
     }
 
@@ -220,9 +220,9 @@ public class JavaGraphTasks {
     public static Path longestSimplePath(Graph graph) {
         if (graph.getVertices().isEmpty()) return new Path();
         ArrayList<Vertex> result = new ArrayList<>();
-        ArrayList<Vertex> current;
+        LinkedHashSet<Vertex> current;
         for (Vertex vertex : graph.getVertices()) {//V
-            current = new ArrayList<>();
+            current = new LinkedHashSet<>();
             if (result.size() != graph.getVertices().size()) modifiedDfs(vertex, graph, current, result);
             else return createPathFromVertexList(result, graph);
         }
