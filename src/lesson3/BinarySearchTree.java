@@ -108,57 +108,33 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
         T element = (T) o;
         Node<T> closest = find(element);
         if (closest == null || element.compareTo(closest.value) != 0) return false;
-        Node<T> next;
-        if (root.value.compareTo(closest.value) == 0) {
+        if (closest.left == null) transplanting(closest, closest.right);
+        else if (closest.right == null) transplanting(closest, closest.left);
+        else {
+            Node<T> next;
             next = closest.right;
-        } else next = closest.left;
-
-        if (closest.left == null && closest.right == null) {
-            if (closest.parent.value.compareTo(closest.value) > 0) closest.parent.left = null;
-            else closest.parent.right = null;
-        } else if (closest.left != null && closest.right != null) {
             while (next.left != null) {
                 next = next.left;
             }
-            if (next.parent != root) {
-                next.parent.left = next.right;
-                if (next.right != null) {
-                    next.right.parent = next.parent;
-                }
+            if (next.parent.value.compareTo(closest.value) != 0) {
+                transplanting(next, next.right);
                 next.right = closest.right;
                 closest.right.parent = next;
             }
-            if (root.value.compareTo(closest.value) != 0) {
-                if (closest.parent.left.value.compareTo(closest.value) == 0)
-                    closest.parent.left = next;
-                else closest.parent.right = next;
-            } else {
-                closest.left.parent = next;
-                root = next;
-            }
+            transplanting(closest, next);
             next.left = closest.left;
             closest.left.parent = next;
-            next.parent = closest.parent;
-
-        } else {
-            boolean onLeft = false;
-            if (closest.left != null) onLeft = true;
-            if (root.value.compareTo(closest.value) != 0) {
-                if (closest.parent.left.value.compareTo(closest.value) == 0)
-                    if (onLeft) closest.parent.left = closest.left;
-                    else closest.parent.left = closest.right;
-                else {
-                    if (onLeft) closest.parent.right = closest.left;
-                    else closest.parent.right = closest.right;
-                }
-            } else {
-                if (onLeft) root = closest.left;
-                else root = closest.right;
-                closest.parent = null;
-            }
-
         }
+        size--;
         return true;
+    }
+
+    private void transplanting(Node<T> closest, Node<T> next) {
+        if (closest.parent == null) root = next;
+        else if (closest.parent.left != null && closest.parent.left.value.compareTo(closest.value) == 0)
+            closest.parent.left = next;
+        else closest.parent.right = next;
+        if (next != null) next.parent = closest.parent;
     }
 
     @Nullable
