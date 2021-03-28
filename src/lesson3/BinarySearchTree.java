@@ -137,22 +137,51 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
         if (next != null) next.parent = closest.parent;
     }
 
+    private Node<T> treeMinimum(Node<T> start) {
+        Node<T> current = start;
+        if (current == null) throw new IllegalArgumentException("Вызвано из null");
+        while (current.left != null) current = current.left;
+        return current;
+    }
+
+    private Node<T> treeMaximum(Node<T> start) {
+        Node<T> current = start;
+        if (current == null) throw new IllegalArgumentException("Вызвано из null");
+        while (current.right != null) current = current.right;
+        return current;
+    }
+
+    private Node<T> findLocalRoot(Node<T> start) {
+        Node<T> current = start;
+        if (start.parent == null) throw new IllegalArgumentException("Родителя не существует");
+        else
+            while (current.value.compareTo(current.parent.value) > 0) current = current.parent;
+        return current;
+    }
+
     @Nullable
     @Override
     public Comparator<? super T> comparator() {
         return null;
     }
 
+
     @NotNull
     @Override
     public Iterator<T> iterator() {
-        return new BinarySearchTreeIterator();
+        return new BinarySearchTreeIterator(root);
     }
 
     public class BinarySearchTreeIterator implements Iterator<T> {
+        private Node<T> current;
+        private Node<T> max;
+        private boolean trigger = false;
 
-        private BinarySearchTreeIterator() {
-            // Добавьте сюда инициализацию, если она необходима.
+        private BinarySearchTreeIterator(Node<T> root) {
+            if (root != null) {
+                current = treeMinimum(root);
+                max = treeMaximum(root);
+            }
         }
 
         /**
@@ -167,8 +196,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         public boolean hasNext() {
-            // TODO
-            throw new NotImplementedError();
+            return root != null && current.value.compareTo(max.value) != 0;
         }
 
         /**
@@ -183,12 +211,33 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          * Спецификация: {@link Iterator#next()} (Ctrl+Click по next)
          * <p>
          * Средняя
+         *
+         * @return
          */
         @Override
         public T next() {
-            // TODO
-            throw new NotImplementedError();
+            if (hasNext()) {
+                Node<T> next;
+                if (!trigger) {
+                    next = current;
+                    trigger = true;
+                }
+                else if (current.parent == null) next = treeMinimum(current.right);
+                else {
+                    if (current.parent.left != null
+                            && current.parent.left.value.compareTo(current.value) == 0
+                            && current.right == null) next = current.parent;
+                    else if (current.right == null) next = findLocalRoot(current).parent;
+                    else next = treeMinimum(current.right);
+                }
+                if (next != null) {
+                    current = next;
+                    return next.value;
+                }
+            }
+            throw new IllegalStateException("Все элементы уже были возвращены");
         }
+
 
         /**
          * Удаление предыдущего элемента
@@ -208,6 +257,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
             throw new NotImplementedError();
         }
     }
+
 
     /**
      * Подмножество всех элементов в диапазоне [fromElement, toElement)
