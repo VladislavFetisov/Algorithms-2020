@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 // attention: Comparable is supported but Comparator is not
 public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> implements CheckableSortedSet<T> {
 
-    public static class Node<T> {
+    private static class Node<T> {
         final T value;
         Node<T> left = null;
         Node<T> right = null;
@@ -19,8 +19,8 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
             this.value = value;
         }
 
-
     }
+
 
     private Node<T> root = null;
 
@@ -104,10 +104,13 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
      */
     @Override
     public boolean remove(Object o) {
-        @SuppressWarnings("unchecked")
-        T element = (T) o;
-        Node<T> closest = find(element);
-        if (closest == null || element.compareTo(closest.value) != 0) return false;
+        Node<T> closest;
+        if (o != null && !o.getClass().equals(Node.class)) {
+            @SuppressWarnings("unchecked")
+            T element = (T) o;
+            closest = find(element);
+            if (element.compareTo(closest.value) != 0) return false;
+        } else closest = (Node<T>) o;
         if (closest.left == null) transplanting(closest, closest.right);
         else if (closest.right == null) transplanting(closest, closest.left);
         else {
@@ -176,6 +179,7 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
         private Node<T> current;
         private Node<T> max;
         private boolean trigger = false;
+        private int count;
 
         private BinarySearchTreeIterator(Node<T> root) {
             if (root != null) {
@@ -216,13 +220,13 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         public T next() {
+            count = 1;
             if (hasNext()) {
                 Node<T> next;
                 if (!trigger) {
                     next = current;
                     trigger = true;
-                }
-                else if (current.parent == null) next = treeMinimum(current.right);
+                } else if (current.parent == null) next = treeMinimum(current.right);
                 else {
                     if (current.parent.left != null
                             && current.parent.left.value.compareTo(current.value) == 0
@@ -253,8 +257,9 @@ public class BinarySearchTree<T extends Comparable<T>> extends AbstractSet<T> im
          */
         @Override
         public void remove() {
-            // TODO
-            throw new NotImplementedError();
+            count--;
+            if (!trigger || count < 0) throw new IllegalStateException("Неверный вызов remove");
+            BinarySearchTree.this.remove(current);
         }
     }
 
