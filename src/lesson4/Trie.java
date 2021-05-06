@@ -126,7 +126,7 @@ public class Trie extends AbstractSet<String> implements Set<String> {
             @Override
             public String next() {
                 if (hasNext) return word.toString();
-                throw new NoSuchElementException("Нечего больше возвращать");
+                throw new IllegalStateException("Нечего больше возвращать");
             }
 
             @Override
@@ -136,35 +136,28 @@ public class Trie extends AbstractSet<String> implements Set<String> {
         };
     }
 
-//    private boolean findWord(StringBuilder word) {
-//        Node lastNode = findNode(word.toString());
-//        assert lastNode != null;
-//        if (goToWordEnd(lastNode, word, )) return true;
-//        char chr = word.charAt(word.length() - 1);
-//        goToWordEnd(lastNode.parent, word.deleteCharAt(word.length() - 1));
-//    }
-
     /**
      * Must be started from the root
      */
     private boolean goToWordEnd(Node current, StringBuilder word, Integer i) {
         if (i < word.length()) {
             int var = i;
-            Node needed=null;
-            for (Map.Entry<Character, Node> node : current.getChildren().entrySet()) {
+            Node needed = null;
+            for (Map.Entry<Character, Node> node : current.getChildren().entrySet())
                 if (node.getKey().equals(word.charAt(i))) {
-
-                    var++;
-                    if (goToWordEnd(node.getValue(), word, var)) return true;
-                    else {
-                        char previous = word.charAt((word.length() - 1));
-                        word.deleteCharAt(word.length() - 1);
-                        if (findNewWord(current, word, previous)) return true;
-                    }
+                    needed = node.getValue();
+                }
+            if (needed != null) {
+                var++;
+                if (goToWordEnd(needed, word, var)) return true;
+                else {
+                    char previous = word.charAt((word.length() - 1));
+                    word.deleteCharAt(word.length() - 1);
+                    return findNewWord(current, word, previous);
                 }
             }
         } else if (word.length() == 0 && findNewWord(current, word, null)) return true;
-        else if (findNewWord(current, word, (char) 0)) return true;
+        else return findNewWord(current, word, (char) 0);
         return false;
     }
 
@@ -182,77 +175,4 @@ public class Trie extends AbstractSet<String> implements Set<String> {
         }
         return false;
     }
-
-
-    private Optional<Map.Entry<Character, Node>> getNext(Map<Character, Node> children, Character previous) {
-        for (Iterator<Map.Entry<Character, Node>> it = children.entrySet().iterator(); it.hasNext(); ) {
-            Map.Entry<Character, Node> entry = it.next();
-            if (entry.getKey().equals(previous) && it.hasNext()) return Optional.of(it.next());
-        }
-        return Optional.empty();
-    }
 }
-//for (Iterator<Map.Entry<Character, Node>> it = root.getChildren().entrySet().iterator(); it.hasNext(); ) {
-//            if (previousChr != 0) {
-//                Map.Entry<Character, Node> entry = it.next();
-//                if (entry.getKey().equals(previousChr) && it.hasNext()) {
-//                    word.append(entry.getKey());
-////                    if (goToWordEnd(it.next().getValue(), word, -1, true)) return true;
-//                    word.deleteCharAt(word.length() - 1);
-//                    return it.next().getKey();
-//                }
-//            }
-//        }
-//        return previousChr;
-
-
-//if (i < word.length()) {
-//            if (!isWordEnd) {
-//                for (Map.Entry<Character, Node> node : current.getChildren().entrySet())
-//                    if (node.getKey().equals(word.charAt(i))) goToWordEnd(node.getValue(), word, i++, false);
-//            }
-//
-//        } else {
-//            for (Map.Entry<Character, Node> node : current.getChildren().entrySet()) {
-//                if (node.getKey().equals((char) 0)) return true;
-//                word.append(node.getKey());
-//                if (goToWordEnd(node.getValue(), word, -1, true))
-//                    word.deleteCharAt(word.length() - 1);
-//            }
-//
-//        }
-
-//else if (i != 0) {
-//            boolean canWork = false;
-//            for (Map.Entry<Character, Node> node : current.getChildren().entrySet()) {
-//                if (node.getKey().equals((char) 0)) canWork = true;
-//                else if (canWork) {
-//                    word.append(node.getKey());
-//                    if (goToWordEnd(node.getValue(), word, 0, true)) return true;
-//                    word.deleteCharAt(word.length() - 1);
-//                }
-//            }
-//        }
-
-//if (i < word.length() && !isWordEnd) {
-//            int var = i;
-//            for (Map.Entry<Character, Node> node : current.getChildren().entrySet()) {
-//                if (node.getKey().equals(word.charAt(i))) {
-//                    var++;
-//                    if (goToWordEnd(node.getValue(), word, var, false, (char) 0)) return true;
-//                    else if (goToWordEnd(node.getValue(), word, 0, true)) return true;
-//                }
-//            }
-//        } else {
-//            boolean canWork = false;
-//            for (Map.Entry<Character, Node> node : current.getChildren().entrySet()) {
-//                if (node.getKey().equals(previousChr)) canWork = true;
-//                else if (canWork) {
-//                    if (node.getKey().equals((char) 0)) return true;
-//                    word.append(node.getKey());
-//                    if (goToWordEnd(node.getValue(), word, 0, true)) return true;
-//                    word.deleteCharAt(word.length() - 1);
-//                }
-//
-//            }
-//        }
