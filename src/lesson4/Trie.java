@@ -19,9 +19,6 @@ public class Trie extends AbstractSet<String> implements Set<String> {
             return children;
         }
 
-        public Node getParent() {
-            return parent;
-        }
 
         @Override
         public String toString() {
@@ -35,7 +32,6 @@ public class Trie extends AbstractSet<String> implements Set<String> {
 
     private int size = 0;
 
-    private Character previousChr = 0;
 
     @Override
     public int size() {
@@ -111,21 +107,22 @@ public class Trie extends AbstractSet<String> implements Set<String> {
     @NotNull
     @Override
     public Iterator<String> iterator() {
-        StringBuilder word = new StringBuilder();
-        Integer i = 0;
-
         return new Iterator<>() {
-            boolean hasNext;
+            final StringBuilder word = new StringBuilder();
+            final Integer i = 0;
+            int count = 0;
 
             @Override
             public boolean hasNext() {
-                hasNext = goToWordEnd(root, word, i);
-                return hasNext;
+                return count < size;
             }
 
             @Override
             public String next() {
-                if (hasNext) return word.toString();
+                if (hasNext() && goToWordEnd(root, word, i)) {
+                    count++;
+                    return word.toString();
+                }
                 throw new IllegalStateException("Нечего больше возвращать");
             }
 
